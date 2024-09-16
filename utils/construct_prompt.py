@@ -29,6 +29,7 @@ def construct_prompt(data):
 
     activities = data['activities'].replace(',', ', ')
 
+
     prompt = (
         f"Generate a travel plan for location {data['destination']} for {data['travelDays']} days for {data['travelersCount']} people with {budget_mapping.get(data['budget'], 'a specified budget')}. "
         f"Preferred travel pace is {pace_mapping.get(data['travelPace'], 'Not specified')}. "
@@ -36,9 +37,16 @@ def construct_prompt(data):
         f"Travel experience: {experience_mapping.get(data['travelExperience'], 'Not specified')}. "
         f"Accommodation preference: {accommodation_mapping.get(data['accommodation'], 'Not specified')}. "
         f"Include activities and special interests like {activities}. "
-        f"Provide a list of hotels with the following details: Hotel Name, Hotel Address, Price, Hotel Image URL, Geo Coordinates, Rating, and Descriptions. "
-        f"Also, suggest an itinerary including: Place Name, Place Details, Place Image URL, Geo Coordinates, Ticket Pricing, Travel Time between locations for {data['travelDays']} days, with each day's plan including the best time to visit. "
-        f"Additionally, include the weather condition for each place in JSON format."
+        f"Provide a list of hotels with the following details: Hotel Name, Hotel Address, Geo Coordinates, Rating, and Descriptions. "
+        f"Also, suggest an itinerary including: Place Name, Place Details, Geo Coordinates, Ticket Pricing, Travel Time between locations, and the best time to visit for each day. "
+        f"Ensure that the response is in the following structured JSON format:\n"
+        f"{{\n"
+        f'    "hotels": [\n'
+        f'        {{"name": "Hotel Name", "address": "Hotel Address", "geo_coordinates": {{"lat": 0.0, "lng": 0.0}}, "rating": 4.5, "description": "Hotel Description"}}\n'
+        f'    ],\n'
+        f'    "itinerary": [\n'
+        f'        {{"day": 1, "places": [{{"name": "Place Name", "details": "Place Details", "geo_coordinates": {{"lat": 0.0, "lng": 0.0}}, "ticket_price": "10 USD", "travel_time": "30 mins", "best_time_to_visit": "Morning"}}]}}\n'
+        f'    ]\n'
+        f"}}"
     )
-    
     return prompt
